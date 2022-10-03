@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackRock.OrleansStockExchange.WebAPI", "BlackRock.OrleansStockExchange.WebAPI\BlackRock.OrleansStockExchange.WebAPI.csproj", "{8A7A38E5-68EB-478B-9A1B-6AB23F9EBD39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackRock.OrleansStockExchange.Contracts", "BlackRock.OrleansStockExchange.Contracts\BlackRock.OrleansStockExchange.Contracts.csproj", "{72AF3B5B-84C1-452C-B5FE-6ACB61A4870A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackRock.OrleansStockExchange.Grains", "BlackRock.OrleansStockExchange.Grains\BlackRock.OrleansStockExchange.Grains.csproj", "{8BC2C16C-EE4D-4B9F-9D15-3F1D344EA67E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8A7A38E5-68EB-478B-9A1B-6AB23F9EBD39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A7A38E5-68EB-478B-9A1B-6AB23F9EBD39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A7A38E5-68EB-478B-9A1B-6AB23F9EBD39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A7A38E5-68EB-478B-9A1B-6AB23F9EBD39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72AF3B5B-84C1-452C-B5FE-6ACB61A4870A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72AF3B5B-84C1-452C-B5FE-6ACB61A4870A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72AF3B5B-84C1-452C-B5FE-6ACB61A4870A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72AF3B5B-84C1-452C-B5FE-6ACB61A4870A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BC2C16C-EE4D-4B9F-9D15-3F1D344EA67E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BC2C16C-EE4D-4B9F-9D15-3F1D344EA67E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BC2C16C-EE4D-4B9F-9D15-3F1D344EA67E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BC2C16C-EE4D-4B9F-9D15-3F1D344EA67E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8AA77D98-BD78-4F77-A8FE-12B8AB7C9F6A}
+	EndGlobalSection
+EndGlobal
