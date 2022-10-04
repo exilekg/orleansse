@@ -9,9 +9,9 @@ namespace BlackRock.OrleansStockExchange.Contracts
 {
     public interface IUserGrain : IGrainWithStringKey
     {
-        Task<IEnumerable<Guid>> GetSecuritiesIds();
+        Task<IEnumerable<Guid>> GetSecurities();
 
-        Task AddSecurity();
+        Task AddSecurity(Guid id);
 
         Task RemoveSecurity(Guid id);
 

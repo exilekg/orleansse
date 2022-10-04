@@ -1,5 +1,4 @@
 ﻿using BlackRock.OrleansStockExchange.Contracts;
-using BlackRock.OrleansStockExchange.Contracts.MainBoardNotifications;
 using Orleans;
 using Orleans.Runtime;
 using Orleans.Streams;
@@ -11,7 +10,7 @@ namespace BlackRock.OrleansStockExchange.Grains
         private readonly IPersistentState<OrderMatchingState> state;
 
         public OrderMatchingGrain(
-            [PersistentState("order", StorageConstants.BlobStorageName)] IPersistentState<OrderMatchingState> state)
+            [PersistentState("order", StorageConstants.StorageName)] IPersistentState<OrderMatchingState> state)
         {
             this.state = state;
         }
@@ -53,7 +52,7 @@ namespace BlackRock.OrleansStockExchange.Grains
 
         private Task PublishChange(NewOrderChange change)
         {
-            IStreamProvider streamProvider = this.GetStreamProvider(StorageConstants.MainBoardStreamName);
+            IStreamProvider streamProvider = this.GetStreamProvider(StorageConstants.EventStreamName);
             var stream = streamProvider.GetStream<IMainBoardChange>(this.GetPrimaryKey(), StorageConstants.MainBoardStreamNamespace);
             return stream.OnNextAsync(change);
         }

@@ -1,5 +1,6 @@
 using BlackRock.OrleansStockExchange.Contracts;
 using BlackRock.OrleansStockExchange.Grains;
+using BlackRock.OrleansStockExchange.WebAPI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualBasic;
@@ -10,59 +11,24 @@ using System.Reflection.Metadata;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add Orleans
-builder.Host.UseOrleans(orleansBuilder =>
-{
-    orleansBuilder
-        .UseLocalhostClustering()
-        .AddSimpleMessageStreamProvider(StorageConstants.MainBoardStreamName, o => o.FireAndForgetDelivery = true)
-        .AddMemoryGrainStorage("PubSubStore")
-        .AddMemoryGrainStorage(StorageConstants.BlobStorageName);
-        //.UseKubernetesHosting()
-        //.AddAzureTableGrainStorage(
-        //    "PubSubStore",
-        //    options => options.ConfigureTableServiceClient(builder.Configuration["StorageAccount:ConnectionString"]))
-        //.AddEventHubStreams(StorageConstants.MainBoardStreamName, (ISiloEventHubStreamConfigurator configurator) =>
-        //{
-        //    configurator.ConfigureEventHub(eventHub => eventHub.Configure(options =>
-        //    {
-        //        options.ConfigureEventHubConnection(
-        //            builder.Configuration["EventHub:ConnectionString"],
-        //            "streamhub",
-        //            "$Default");
-        //    }));
-        //    configurator.UseAzureTableCheckpointer(
-        //        tableBulder => tableBulder.Configure(options =>
-        //        {
-        //            options.ConfigureTableServiceClient(builder.Configuration["StorageAccount:ConnectionString"]);
-        //            options.PersistInterval = TimeSpan.FromSeconds(10);
-        //        }));
-        //})
-        //.AddAzureTableGrainStorage(
-        //    StorageConstants.BlobStorageName,
-
-    //    options => options.ConfigureTableServiceClient(builder.Configuration["StorageAccount:ConnectionString"]));
-
-    //orleansBuilder.UseRedisClustering(options => options.ConnectionString = "redis:6379");
-    //orleansBuilder.AddRedisGrainStorage("definitions", options => options.ConnectionString = "redis:6379");
-
-    orleansBuilder.UseDashboard();
-});
-
-//.AddAzureBlobGrainStorage(StorageConstants.BlobStorageName, blob =>
-//{
-//    blob.ConfigureBlobServiceClient(builder.Configuration["StorageAccount:ConnectionString"]);
-//    blob.UseJson = true;
-//}));
-
-// Add services to the container.
+builder.Host.UseOrleansCluster(builder.Environment, builder.Configuration);
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services
-    .AddSignalR()
-    .AddAzureSignalR(builder.Configuration["SignalR:ConnectionString"]);
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services
+        .AddSignalR();
+}
+else
+{
+    builder.Services
+        .AddSignalR()
+        .AddAzureSignalR(builder.Configuration["SignalR:ConnectionString"]);
+}
+
 
 builder.Services.AddCors(
     options => options.AddDefaultPolicy(
