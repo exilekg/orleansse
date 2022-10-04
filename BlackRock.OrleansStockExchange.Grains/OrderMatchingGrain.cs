@@ -1,4 +1,5 @@
 ﻿using BlackRock.OrleansStockExchange.Contracts;
+using BlackRock.OrleansStockExchange.Contracts.MainBoardNotifications;
 using Orleans;
 using Orleans.Runtime;
 using Orleans.Streams;
@@ -38,86 +39,70 @@ namespace BlackRock.OrleansStockExchange.Grains
         public async Task<bool> AddNewOrder(Order order)
         {
             order.LeavesQuantity = order.Quantity;
-            var transaction = ExecuteTrades(order);
-
-            if (order.LeavesQuantity > 0)
-            {
-                AddOrder(order);
-            }
+            NewOrderChange change = ChangeState(order);
             await this.state.WriteStateAsync();
 
-            if (transaction is not null)
-            {
-                await this.PublishTransaction(transaction);
-            }
+            change.BidAmount = this.state.State.BidMarketDepth.Values.Sum();
+            change.BidPrice = this.state.State.BidMarketDepth.Keys.FirstOrDefault();
+            change.AskAmount = this.state.State.AskMarketDepth.Values.Sum();
+            change.AskPrice = this.state.State.AskMarketDepth.Keys.FirstOrDefault();
+
+            await this.PublishChange(change);
             return true;
         }
 
-        private Task PublishTransaction(Transaction transaction)
+        private Task PublishChange(NewOrderChange change)
         {
-            IStreamProvider streamProvider = GetStreamProvider(StorageConstants.TransactionsStreamName);
-            var stream = streamProvider.GetStream<Transaction>(this.GetPrimaryKey(), nameof(Transaction));
-            return stream.OnNextAsync(transaction);
+            IStreamProvider streamProvider = this.GetStreamProvider(StorageConstants.MainBoardStreamName);
+            var stream = streamProvider.GetStream<IMainBoardChange>(this.GetPrimaryKey(), StorageConstants.MainBoardStreamNamespace);
+            return stream.OnNextAsync(change);
         }
 
-        private Transaction? ExecuteTrades(Order order)
+        private NewOrderChange ChangeState(Order order)
         {
-            var depthChanges = this.GetTradeDepthChanges(order);
-            if (depthChanges?.Any() != true)
-                return null;
+            var transaction = this.ExecuteTrade(order);
+            this.AddToDepth(order);
 
-            Transaction transacion = new()
+            return transaction;
+        }
+
+        private NewOrderChange ExecuteTrade(Order order)
+        {
+            NewOrderChange transaction = new()
             {
-                Price = depthChanges.First().price,
-                Quantity = depthChanges.Sum(c => c.qty)
+                SecurityId = this.GetPrimaryKey(),
             };
 
-            RemoveFromDepth(order, depthChanges);
-
-            return transacion;
-        }
-
-        private void RemoveFromDepth(Order order, IEnumerable<(decimal price, int qty)> depthChanges)
-        {
             OrderSide opositeSide = order.Side.GetOpositeSide();
             SortedList<decimal, int> marketDepth = this.state.State.GetMarketDepth(opositeSide);
-            foreach (var change in depthChanges)
+
+            while (marketDepth.Any()
+                && order.LeavesQuantity > 0
+                && order.CanMatch(marketDepth.First().Key))
             {
-                if (marketDepth[change.price] <= change.qty)
-                {
-                    marketDepth.Remove(change.price);
-                }
-                else
-                {
-                    marketDepth[change.price] -= change.qty;
-                }
-            }
-        }
-
-        private IEnumerable<(decimal price, int qty)> GetTradeDepthChanges(Order order)
-        {
-            OrderSide opositeSide = order.Side.GetOpositeSide();
-            SortedList<decimal, int> marketDepth = this.state.State.GetMarketDepth(opositeSide);
-            Comparer<decimal> comparer = order.Side.GetComparerer();
-
-            List<(decimal, int)> depthChanges = new();
-
-            foreach (var depthPrice in marketDepth.Keys)
-            {
-                if (order.LeavesQuantity <= 0 || comparer.Compare(depthPrice, order.Price) < 0)
-                    break;
+                decimal depthPrice = marketDepth.First().Key;
+                transaction.TransactionPrice ??= depthPrice;
+                transaction.MatchedQuantity ??= 0;
 
                 var quantity = Math.Min(order.LeavesQuantity, marketDepth[depthPrice]);
                 order.LeavesQuantity -= quantity;
+                transaction.MatchedQuantity += quantity;
+                marketDepth[depthPrice] -= quantity;
 
-                depthChanges.Add((depthPrice, quantity));
+                if (marketDepth[depthPrice] <= 0)
+                {
+                    marketDepth.Remove(depthPrice);
+                }
             }
 
-            return depthChanges;
+            return transaction;
         }
 
-        private void AddOrder(Order order)
+        private void AddToDepth(Order order)
         {
+            if (order.LeavesQuantity == 0)
+                return;
+
             SortedList<decimal, int> marketDepth = this.state.State.GetMarketDepth(order.Side);
             if (marketDepth.ContainsKey(order.Price))
             {

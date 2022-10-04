@@ -29,9 +29,9 @@ namespace BlackRock.OrleansStockExchange.WebAPI.Controllers
         }
 
         [HttpPost("{id}/orders")]
-        public Task<bool> NewOrder(string id, [FromBody]Order order)
+        public Task<bool> NewOrder(Guid id, [FromBody]Order order)
         {
-            var orderMathcer = this.grainFactory.GetGrain<IOrderMatchingGrain>(Guid.Parse(id));
+            var orderMathcer = this.grainFactory.GetGrain<IOrderMatchingGrain>(id);
             return orderMathcer.AddNewOrder(order);
         }
     }

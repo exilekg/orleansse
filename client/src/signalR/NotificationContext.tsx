@@ -15,10 +15,6 @@ export const NotificationContextProvider: React.FC<NotificationContextProviderPr
 	const [connectionManager, setConnectionManager] = React.useState<ConnextionManager | undefined>();
 	React.useEffect(() => {
 		const manager = new ConnextionManager(hubUrl);
-		// (async () => {
-		// 	await manager.start();
-		// 	setConnectionManager(manager);
-		// })();
 		manager.start()
 			.then(() => setConnectionManager(manager))
 		return () => {

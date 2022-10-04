@@ -9,6 +9,7 @@ namespace BlackRock.OrleansStockExchange.Grains
     public class StorageConstants
     {
         public const string BlobStorageName = nameof(BlobStorageName);
-        public const string TransactionsStreamName = nameof(TransactionsStreamName);
+        public const string MainBoardStreamName = nameof(MainBoardStreamName);
+        public const string MainBoardStreamNamespace = nameof(MainBoardStreamNamespace);
     }
 }

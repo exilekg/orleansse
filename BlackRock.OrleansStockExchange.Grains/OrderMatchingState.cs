@@ -9,9 +9,6 @@ namespace BlackRock.OrleansStockExchange.Grains
 {
     internal class OrderMatchingState
     {
-        private static Comparer<decimal> BidComparerer = Comparer<decimal>.Create((x, y) => y.CompareTo(x));
-        private static Comparer<decimal> AskComparerer = Comparer<decimal>.Default;
-
         public SortedList<decimal, int> BidMarketDepth { get; set; }
 
         public SortedList<decimal, int> AskMarketDepth { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Orleans;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace BlackRock.OrleansStockExchange.Contracts
 {
-    public class Transaction
+    public interface IMainBoardPublisher : IGrainWithGuidKey
     {
-        public decimal Price { get; set; }
-
-        public int Quantity { get; set; }
     }
 }

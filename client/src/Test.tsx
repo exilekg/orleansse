@@ -3,6 +3,6 @@ import { useNotificationHandler } from "./signalR/hooks";
 
 export const TestCmp: React.FC = () => {
 
-    useNotificationHandler("test", console.log, []);
+    useNotificationHandler("mainBoardChange", console.log, []);
     return <div>Test</div>
 }

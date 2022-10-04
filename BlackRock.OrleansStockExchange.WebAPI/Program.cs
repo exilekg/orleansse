@@ -13,13 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseOrleans(orleansBuilder =>
 {
     orleansBuilder
-        .UseLocalhostClustering()
+        //.UseLocalhostClustering()
         //.AddSimpleMessageStreamProvider(StorageConstants.TransactionsStreamName, o => o.FireAndForgetDelivery = true)
         //.AddMemoryGrainStorage("PubSubStore")
+        .UseKubernetesHosting()
         .AddAzureTableGrainStorage(
             "PubSubStore",
             options => options.ConfigureTableServiceClient(builder.Configuration["StorageAccount:ConnectionString"]))
-        .AddEventHubStreams(StorageConstants.TransactionsStreamName, (ISiloEventHubStreamConfigurator configurator) =>
+        .AddEventHubStreams(StorageConstants.MainBoardStreamName, (ISiloEventHubStreamConfigurator configurator) =>
         {
             configurator.ConfigureEventHub(eventHub => eventHub.Configure(options =>
             {
@@ -40,6 +41,9 @@ builder.Host.UseOrleans(orleansBuilder =>
 
             options => options.ConfigureTableServiceClient(builder.Configuration["StorageAccount:ConnectionString"]));
 
+    orleansBuilder.UseRedisClustering(options => options.ConnectionString = "redis:6379");
+    orleansBuilder.AddRedisGrainStorage("definitions", options => options.ConnectionString = "redis:6379");
+
     orleansBuilder.UseDashboard();
 });
 
@@ -55,7 +59,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSignalR();
+builder.Services
+    .AddSignalR()
+    .AddAzureSignalR(builder.Configuration["SignalR:ConnectionString"]);
+
 builder.Services.AddCors(
     options => options.AddDefaultPolicy(
         policy => policy.AllowAnyHeader()
@@ -69,12 +76,8 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
