@@ -6,19 +6,9 @@ using System.Threading.Tasks;
 
 namespace BlackRock.OrleansStockExchange.Contracts
 {
-    public class MainBoardItem
+    public class StatisticsChange : IMainBoardChange
     {
         public Guid SecurityId { get; set; }
-
-        public string Symbol { get; set; }
-
-        public int BidAmount { get; set; }
-
-        public decimal BidPrice { get; set; }
-
-        public int AskAmount { get; set; }
-
-        public decimal AskPrice { get; set; }
 
         public decimal Price { get; set; }
 

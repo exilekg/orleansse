@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Orleans;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace BlackRock.OrleansStockExchange.Contracts
 {
-    public interface IMainBoardChange
+    public interface IMainBoardItemGrain : IGrainWithGuidKey
     {
-        public Guid SecurityId { get; set; }
+        Task<MainBoardItem> GetMainBoardItem();
     }
 }

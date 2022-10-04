@@ -17,5 +17,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+
+  <ItemGroup>
+    <Orleans_CodeGenInputs Remove="IMainBoardItemGrain.cs" />
+  </ItemGroup>
   
 </Project>
