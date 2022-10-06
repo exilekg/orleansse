@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace BlackRock.OrleansStockExchange.Grains
 {
     [ImplicitStreamSubscription(StorageConstants.MainBoardStreamNamespace)]
-    internal class MainBoardItemGrain : Grain, IMainBoardItemGrain, IAsyncObserver<NewOrderChange>
+    internal class MainBoardItemGrain : Grain, IMainBoardItemGrain, IAsyncObserver<IMainBoardChange>
     {
         private readonly IPersistentState<MainBoardItem> state;
 
@@ -39,7 +39,7 @@ namespace BlackRock.OrleansStockExchange.Grains
         private async Task SubscribeToStream()
         {
             var streamProvider = GetStreamProvider(StorageConstants.EventStreamName);
-            var stream = streamProvider.GetStream<NewOrderChange>(this.GetPrimaryKey(), StorageConstants.MainBoardStreamNamespace);
+            var stream = streamProvider.GetStream<IMainBoardChange>(this.GetPrimaryKey(), StorageConstants.MainBoardStreamNamespace);
             await stream.SubscribeAsync(this);
         }
 
@@ -65,13 +65,25 @@ namespace BlackRock.OrleansStockExchange.Grains
             }
         }
 
-        public async Task OnNextAsync(NewOrderChange newOrderChange, StreamSequenceToken? token = null)
+        public async Task OnNextAsync(IMainBoardChange change, StreamSequenceToken? token = null)
         {
-            this.Update(newOrderChange);
+            if (change is NewOrderChange newOrderChange)
+            {
+                this.Update(newOrderChange);
+            }
+            else if (change is VWAPChange vwapChange)
+            {
+                this.Update(vwapChange);
+            }
+
             await this.state.WriteStateAsync();
             await this.PublishChange();
         }
 
+        private void Update(VWAPChange vwapChange)
+        {
+            this.state.State.VWAP = vwapChange.VWAP;
+        }
         private void Update(NewOrderChange newOrderChange)
         {
             MainBoardItem currentState = this.state.State;
