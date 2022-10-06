@@ -51,11 +51,10 @@ export const MarketDepth: React.FC<MarketDepthProps> = ({ securityId }) => {
         return null;
 
         return (
-            <Box sx={{ margin: 1 }}>
+            <Box sx={{ marginLeft: "40px", width: "50%", textAlign: "center" }}>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell></TableCell>
                     <TableCell>Bid Price</TableCell>
                     <TableCell>Bid Amount</TableCell>
                     <TableCell>Ask Price</TableCell>
@@ -65,9 +64,6 @@ export const MarketDepth: React.FC<MarketDepthProps> = ({ securityId }) => {
                 <TableBody>
                   {marketDepth.depth.map((level) => (
                     <TableRow key={level.index}>
-                      <TableCell component="th" scope="row">
-                        {level.index}
-                      </TableCell>
                       <TableCell>{level.bidPrice}</TableCell>
                       <TableCell>{level.bidAmount}</TableCell>
                       <TableCell>{level.askPrice}</TableCell>

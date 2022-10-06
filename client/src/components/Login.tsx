@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 export interface LogInProps {
 	setUsername: (username: string) => void;
 }
+					//backgroundImage: "url(https://source.unsplash.com/random)",
 
 export const LogIn: React.FC<LogInProps> = ({ setUsername }) => {
 	const [currentUsername, setCurrentUsername] = React.useState<string | undefined>(undefined);
@@ -31,7 +32,7 @@ export const LogIn: React.FC<LogInProps> = ({ setUsername }) => {
 				sm={4}
 				md={9}
 				sx={{
-					backgroundImage: "url(https://source.unsplash.com/random)",
+					backgroundImage: 'url(/login.jpg)',
 					backgroundRepeat: "no-repeat",
 					backgroundColor: t =>
 						t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900],

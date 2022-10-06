@@ -9,7 +9,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { Box, Stack, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Box, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 
 const Transition = React.forwardRef(function Transition(
 	props: TransitionProps & {
@@ -49,9 +49,23 @@ export const NewOrder: React.FC<NewOrderProps> = ({ mainBoardItem, onClose }) =>
 			onClose={onClose}
 			aria-describedby="alert-dialog-slide-description"
 		>
-			<DialogTitle>{`New order for ${mainBoardItem?.symbol}`}</DialogTitle>
+			<DialogTitle>{`New order`}</DialogTitle>
 			<DialogContent>
-				<Stack spacing={2}>
+				<Stack spacing={4}>
+					<Typography>
+						Symbol: <b>{mainBoardItem?.symbol}</b>
+					</Typography>
+						<ToggleButtonGroup
+							color="primary"
+							size="small"
+							value={side}
+							exclusive
+							onChange={(e, newValue) => setSide(newValue)}
+							aria-label="Platform"
+						>
+							<ToggleButton value={OrderSide.Buy}>Buy</ToggleButton>
+							<ToggleButton value={OrderSide.Sell}>Sell</ToggleButton>
+						</ToggleButtonGroup>
 					<TextField
 						label="Amount"
 						type="number"
@@ -70,19 +84,6 @@ export const NewOrder: React.FC<NewOrderProps> = ({ mainBoardItem, onClose }) =>
 						variant="standard"
 						onChange={e => setPrice(parseInt(e.target.value))}
 					/>
-					<Stack direction="row" alignItems="center" justifyContent="center" spacing={2}>
-						<ToggleButtonGroup
-							color="primary"
-							size="small"
-							value={side}
-							exclusive
-							onChange={(e, newValue) => setSide(newValue)}
-							aria-label="Platform"
-						>
-							<ToggleButton value={OrderSide.Buy}>Buy</ToggleButton>
-							<ToggleButton value={OrderSide.Sell}>Sell</ToggleButton>
-						</ToggleButtonGroup>
-					</Stack>
 				</Stack>
 			</DialogContent>
 			<DialogActions>

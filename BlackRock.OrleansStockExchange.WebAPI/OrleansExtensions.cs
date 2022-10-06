@@ -51,7 +51,7 @@ namespace BlackRock.OrleansStockExchange.WebAPI
 
                     options => options.ConfigureTableServiceClient(config["StorageAccount:ConnectionString"]));
 
-                //orleansBuilder.UseAzureTableReminderService(options => options.);
+                orleansBuilder.UseAzureTableReminderService(config["StorageAccount:ConnectionString"]);
         }
 
         private static void UseDevelopmentCluster(this ISiloBuilder orleansBuilder)

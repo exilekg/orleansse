@@ -5,6 +5,7 @@ import React from "react";
 import { IMainBoardItem } from "../appStore/model";
 import { useMainBoard } from "../hooks/useMainBoard";
 import { useNotificationHandler } from "../signalR/hooks";
+import MainAppBar from "./MainAppBar";
 import { MarketDepth } from "./MarketDepth";
 import { NewOrder } from "./NewOrder";
 
@@ -45,6 +46,11 @@ const columns: MRT_ColumnDef<IMainBoardItem>[] = [
 		size: 10,
 	},
 	{
+		accessorKey: "vwap",
+		header: "VWAP",
+		size: 10,
+	},
+	{
 		accessorKey: "high",
 		header: "High",
 		size: 10,
@@ -78,6 +84,8 @@ export const MainBoard: React.FC = () => {
 	}, [loadMainBoard, mainBoard]);
 
 	return (
+		<>
+		<MainAppBar />
 		<Card sx={{ minWidth: 275 }}>
 			<CardContent>
 				{mainBoard ? (
@@ -103,5 +111,6 @@ export const MainBoard: React.FC = () => {
 				<NewOrder onClose={() => setNewOrderItem(undefined)} mainBoardItem={newOrderItem} />
 			</CardContent>
 		</Card>
+		</>
 	);
 };

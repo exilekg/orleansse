@@ -12,6 +12,7 @@ export interface IMainBoardItem {
 	change: number;
 	changePercent: number;
 	volume: number;
+	vwap: number;
 }
 
 export interface IMarketDepthLevel {
