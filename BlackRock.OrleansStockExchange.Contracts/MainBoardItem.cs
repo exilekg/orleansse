@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BlackRock.OrleansStockExchange.Contracts
+﻿namespace BlackRock.OrleansStockExchange.Contracts
 {
     public class MainBoardItem
     {
@@ -31,6 +25,8 @@ namespace BlackRock.OrleansStockExchange.Contracts
         public decimal Change { get; set; }
 
         public decimal ChangePercent { get; set; }
+
+        public decimal VWAP { get; set; }
 
         public int Volume { get; set; }
     }

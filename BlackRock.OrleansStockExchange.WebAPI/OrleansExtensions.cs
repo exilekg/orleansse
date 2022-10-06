@@ -50,6 +50,8 @@ namespace BlackRock.OrleansStockExchange.WebAPI
                     StorageConstants.StorageName,
 
                     options => options.ConfigureTableServiceClient(config["StorageAccount:ConnectionString"]));
+
+                //orleansBuilder.UseAzureTableReminderService(options => options.);
         }
 
         private static void UseDevelopmentCluster(this ISiloBuilder orleansBuilder)
@@ -57,6 +59,7 @@ namespace BlackRock.OrleansStockExchange.WebAPI
                 .UseLocalhostClustering()
                 .AddSimpleMessageStreamProvider(StorageConstants.EventStreamName, o => o.FireAndForgetDelivery = true)
                 .AddMemoryGrainStorage("PubSubStore")
-                .AddMemoryGrainStorage(StorageConstants.StorageName);
+                .AddMemoryGrainStorage(StorageConstants.StorageName)
+                .UseInMemoryReminderService();
     }
 }
