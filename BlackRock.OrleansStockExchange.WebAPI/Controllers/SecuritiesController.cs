@@ -22,7 +22,7 @@ namespace BlackRock.OrleansStockExchange.WebAPI.Controllers
                         .GetAll();
 
         [HttpGet("{id}/depth")]
-        public Task<IEnumerable<MarketDepthRow>> GetDepth(string id)
+        public Task<IEnumerable<MarketDepthLevel>> GetDepth(string id)
         {
             var orderMathcer = this.grainFactory.GetGrain<IOrderMatchingGrain>(Guid.Parse(id));
             return orderMathcer.GetMarketDepth();

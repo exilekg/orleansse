@@ -9,15 +9,18 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 
-export const LogIn: React.FC = () => {
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		const data = new FormData(event.currentTarget);
-		console.log({
-			email: data.get("email"),
-			password: data.get("password"),
-		});
-	};
+export interface LogInProps {
+	setUsername: (username: string) => void;
+}
+
+export const LogIn: React.FC<LogInProps> = ({ setUsername }) => {
+	const [currentUsername, setCurrentUsername] = React.useState<string | undefined>(undefined);
+
+	const signIn = React.useCallback(() => {
+		if (currentUsername) {
+			setUsername(currentUsername);
+		}
+	}, [currentUsername, setUsername])
 
 	return (
 		<Grid container component="main" sx={{ height: "100vh" }}>
@@ -53,7 +56,7 @@ export const LogIn: React.FC = () => {
 					<Typography component="h1" variant="h5">
 						Sign in
 					</Typography>
-					<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+					<Box sx={{ mt: 1 }}>
 						<TextField
 							margin="normal"
 							required
@@ -64,6 +67,7 @@ export const LogIn: React.FC = () => {
 							autoComplete="email"
 							autoFocus
 							variant="standard"
+							onChange={e => { setCurrentUsername(e.target.value) } }
 						/>
 						<TextField
 							margin="normal"
@@ -76,7 +80,7 @@ export const LogIn: React.FC = () => {
 							autoComplete="current-password"
 							variant="standard"
 						/>
-						<Button type="submit" fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }}>
+						<Button fullWidth variant="outlined" sx={{ mt: 3, mb: 2 }} onClick={signIn} disabled={!currentUsername}>
 							Sign In
 						</Button>
 					</Box>

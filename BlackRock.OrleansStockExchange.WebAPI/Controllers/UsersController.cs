@@ -4,6 +4,8 @@ using Orleans;
 
 namespace BlackRock.OrleansStockExchange.WebAPI.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class UsersController : Controller
     {
         private readonly IGrainFactory grainFactory;

@@ -21,5 +21,7 @@ namespace BlackRock.OrleansStockExchange.Contracts
         public int AskAmount { get; set; }
 
         public decimal AskPrice { get; set; }
+
+        public int LeavesQuantity { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BlackRock.OrleansStockExchange.Contracts
 {
-    public class MarketDepthRow
+    public class MarketDepthLevel
     {
         public int Index { get; set; }
 

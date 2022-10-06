@@ -10,8 +10,6 @@ namespace BlackRock.OrleansStockExchange.Contracts
     {
         public int Quantity { get; set; }
 
-        public int LeavesQuantity { get; set; }
-
         public decimal Price { get; set; }
 
         public OrderSide Side { get; set; }

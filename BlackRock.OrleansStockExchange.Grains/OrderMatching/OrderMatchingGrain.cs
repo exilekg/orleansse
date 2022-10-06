@@ -18,6 +18,11 @@ namespace BlackRock.OrleansStockExchange.Grains
         public override async Task OnActivateAsync()
         {
             await base.OnActivateAsync();
+            this.InitState();
+        }
+
+        private void InitState()
+        {
             if (this.state.State.AskMarketDepth == default)
             {
                 this.state.State.AskMarketDepth = new SortedList<decimal, int>(OrderSide.Sell.GetComparerer());
@@ -37,7 +42,6 @@ namespace BlackRock.OrleansStockExchange.Grains
 
         public async Task<bool> AddNewOrder(Order order)
         {
-            order.LeavesQuantity = order.Quantity;
             NewOrderChange change = ChangeState(order);
             await this.state.WriteStateAsync();
 
@@ -59,33 +63,33 @@ namespace BlackRock.OrleansStockExchange.Grains
 
         private NewOrderChange ChangeState(Order order)
         {
-            var transaction = this.ExecuteTrade(order);
-            this.AddToDepth(order);
-
-            return transaction;
+            var change = this.ExecuteTrade(order);
+            this.AddToDepth(order, change.LeavesQuantity);
+            return change;
         }
 
         private NewOrderChange ExecuteTrade(Order order)
         {
-            NewOrderChange transaction = new()
+            NewOrderChange change = new()
             {
                 SecurityId = this.GetPrimaryKey(),
+                LeavesQuantity = order.Quantity,
             };
 
             OrderSide opositeSide = order.Side.GetOpositeSide();
             SortedList<decimal, int> marketDepth = this.state.State.GetMarketDepth(opositeSide);
 
             while (marketDepth.Any()
-                && order.LeavesQuantity > 0
+                && change.LeavesQuantity > 0
                 && order.CanMatch(marketDepth.First().Key))
             {
                 decimal depthPrice = marketDepth.First().Key;
-                transaction.TransactionPrice ??= depthPrice;
-                transaction.MatchedQuantity ??= 0;
+                change.TransactionPrice ??= depthPrice;
+                change.MatchedQuantity ??= 0;
 
-                var quantity = Math.Min(order.LeavesQuantity, marketDepth[depthPrice]);
-                order.LeavesQuantity -= quantity;
-                transaction.MatchedQuantity += quantity;
+                var quantity = Math.Min(change.LeavesQuantity, marketDepth[depthPrice]);
+                change.LeavesQuantity -= quantity;
+                change.MatchedQuantity += quantity;
                 marketDepth[depthPrice] -= quantity;
 
                 if (marketDepth[depthPrice] <= 0)
@@ -94,31 +98,31 @@ namespace BlackRock.OrleansStockExchange.Grains
                 }
             }
 
-            return transaction;
+            return change;
         }
 
-        private void AddToDepth(Order order)
+        private void AddToDepth(Order order, int leavesQuantity)
         {
-            if (order.LeavesQuantity == 0)
+            if (leavesQuantity <= 0)
                 return;
 
             SortedList<decimal, int> marketDepth = this.state.State.GetMarketDepth(order.Side);
             if (marketDepth.ContainsKey(order.Price))
             {
-                marketDepth[order.Price] += order.LeavesQuantity;
+                marketDepth[order.Price] += leavesQuantity;
             }
             else
             {
-                marketDepth[order.Price] = order.LeavesQuantity;
+                marketDepth[order.Price] = leavesQuantity;
             }
         }
 
-        public Task<IEnumerable<MarketDepthRow>> GetMarketDepth()
+        public Task<IEnumerable<MarketDepthLevel>> GetMarketDepth()
             => Task.FromResult(this.GetMarketDeptRows()
                 .ToList()
                 .AsEnumerable());
 
-        private IEnumerable<MarketDepthRow> GetMarketDeptRows()
+        private IEnumerable<MarketDepthLevel> GetMarketDeptRows()
         {
             SortedList<decimal, int> askMarketDepth = this.state.State.AskMarketDepth;
             SortedList<decimal, int> bidMarketDepth = this.state.State.BidMarketDepth;
@@ -128,7 +132,7 @@ namespace BlackRock.OrleansStockExchange.Grains
             {
                 var askPrice = askMarketDepth.Count > i ? askMarketDepth.Keys[i] : default(decimal?);
                 var bidPrice = bidMarketDepth.Count > i ? bidMarketDepth.Keys[i] : default(decimal?);
-                yield return new MarketDepthRow
+                yield return new MarketDepthLevel
                 {
                     Index = i,
                     AskPrice = askPrice,

@@ -4,7 +4,7 @@ using Orleans.Hosting;
 
 namespace BlackRock.OrleansStockExchange.WebAPI
 {
-    public static class Extensions
+    public static class OrleansExtensions
     {
         public static IHostBuilder UseOrleansCluster(this IHostBuilder builder, IWebHostEnvironment environment, IConfiguration config)
             => builder.UseOrleans(orleansBuilder =>
@@ -24,8 +24,8 @@ namespace BlackRock.OrleansStockExchange.WebAPI
         {
             orleansBuilder
                 .UseKubernetesHosting()
-                .UseRedisClustering(options => options.ConnectionString = "redis:6379")
-                .AddRedisGrainStorage("definitions", options => options.ConnectionString = "redis:6379")
+                .UseRedisClustering(options => options.ConnectionString = config["Redis:ConnectionString"])
+                .AddRedisGrainStorage("definitions", options => options.ConnectionString = config["Redis:ConnectionString"])
                 .AddAzureTableGrainStorage(
                     "PubSubStore",
                     options => options.ConfigureTableServiceClient(config["StorageAccount:ConnectionString"]))
@@ -35,8 +35,8 @@ namespace BlackRock.OrleansStockExchange.WebAPI
                     {
                         options.ConfigureEventHubConnection(
                             config["EventHub:ConnectionString"],
-                            "streamhub",
-                            "$Default");
+                            config["EventHub:Name"],
+                            config["EventHub:ConsumerGroup"]);
                     }));
 
                     configurator.UseAzureTableCheckpointer(

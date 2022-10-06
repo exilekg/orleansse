@@ -2,16 +2,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    deployment.kubernetes.io/revision: "3"
+    deployment.kubernetes.io/revision: "7"
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"deployment.kubernetes.io/revision":"2"},"creationTimestamp":"2022-10-03T23:48:48Z","generation":4,"labels":{"app":"orleans-se"},"name":"orleans-se","namespace":"default","resourceVersion":"11374","uid":"698c69af-e718-49b2-9665-0a1e6774343e"},"spec":{"minReadySeconds":60,"progressDeadlineSeconds":600,"replicas":3,"revisionHistoryLimit":10,"selector":{"matchLabels":{"app":"orleans-se"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"orleans-se","orleans/clusterId":"orleans-se","orleans/serviceId":"orleans-se"}},"spec":{"containers":[{"env":[{"name":"ORLEANS_SERVICE_ID","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.labels['orleans/serviceId']"}}},{"name":"ORLEANS_CLUSTER_ID","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.labels['orleans/clusterId']"}}},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.namespace"}}},{"name":"POD_NAME","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.name"}}},{"name":"POD_IP","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"status.podIP"}}},{"name":"DOTNET_SHUTDOWNTIMEOUTSECONDS","value":"120"}],"image":"orleansse.azurecr.io/3","imagePullPolicy":"Always","name":"main","ports":[{"containerPort":11111,"protocol":"TCP"},{"containerPort":30000,"protocol":"TCP"},{"containerPort":80,"protocol":"TCP"},{"containerPort":8080,"protocol":"TCP"},{"containerPort":443,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File"}],"dnsPolicy":"ClusterFirst","imagePullSecrets":[{"name":"orleansse"}],"restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"terminationGracePeriodSeconds":180}}},"status":{"availableReplicas":3,"conditions":[{"lastTransitionTime":"2022-10-03T23:48:49Z","lastUpdateTime":"2022-10-04T00:01:39Z","message":"ReplicaSet \"orleans-se-59bd95cddc\" has successfully progressed.","reason":"NewReplicaSetAvailable","status":"True","type":"Progressing"},{"lastTransitionTime":"2022-10-04T00:03:02Z","lastUpdateTime":"2022-10-04T00:03:02Z","message":"Deployment has minimum availability.","reason":"MinimumReplicasAvailable","status":"True","type":"Available"}],"observedGeneration":4,"readyReplicas":3,"replicas":3,"updatedReplicas":3}}
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"deployment.kubernetes.io/revision":"6"},"creationTimestamp":"2022-10-03T23:48:48Z","generation":13,"labels":{"app":"orleans-se"},"name":"orleans-se","namespace":"default","resourceVersion":"739228","uid":"698c69af-e718-49b2-9665-0a1e6774343e"},"spec":{"minReadySeconds":60,"progressDeadlineSeconds":600,"replicas":2,"revisionHistoryLimit":10,"selector":{"matchLabels":{"app":"orleans-se"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"orleans-se","orleans/clusterId":"orleans-se","orleans/serviceId":"orleans-se"}},"spec":{"containers":[{"env":[{"name":"ORLEANS_SERVICE_ID","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.labels['orleans/serviceId']"}}},{"name":"ORLEANS_CLUSTER_ID","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.labels['orleans/clusterId']"}}},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.namespace"}}},{"name":"POD_NAME","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.name"}}},{"name":"POD_IP","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"status.podIP"}}},{"name":"DOTNET_SHUTDOWNTIMEOUTSECONDS","value":"120"}],"image":"orleansse.azurecr.io/9","imagePullPolicy":"Always","name":"main","ports":[{"containerPort":11111,"protocol":"TCP"},{"containerPort":30000,"protocol":"TCP"},{"containerPort":80,"protocol":"TCP"},{"containerPort":8080,"protocol":"TCP"},{"containerPort":443,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File"}],"dnsPolicy":"ClusterFirst","imagePullSecrets":[{"name":"orleansse"}],"restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"terminationGracePeriodSeconds":180}}},"status":{"availableReplicas":2,"conditions":[{"lastTransitionTime":"2022-10-06T03:27:53Z","lastUpdateTime":"2022-10-06T03:27:53Z","message":"Deployment has minimum availability.","reason":"MinimumReplicasAvailable","status":"True","type":"Available"},{"lastTransitionTime":"2022-10-03T23:48:49Z","lastUpdateTime":"2022-10-06T06:33:25Z","message":"ReplicaSet \"orleans-se-b7d5cb4d\" is progressing.","reason":"ReplicaSetUpdated","status":"True","type":"Progressing"}],"observedGeneration":13,"readyReplicas":2,"replicas":3,"unavailableReplicas":1,"updatedReplicas":1}}
   creationTimestamp: "2022-10-03T23:48:48Z"
-  generation: 5
+  generation: 16
   labels:
     app: orleans-se
   name: orleans-se
   namespace: default
-  resourceVersion: "18205"
+  resourceVersion: "740568"
   uid: 698c69af-e718-49b2-9665-0a1e6774343e
 spec:
   minReadySeconds: 60
@@ -63,7 +63,7 @@ spec:
               fieldPath: status.podIP
         - name: DOTNET_SHUTDOWNTIMEOUTSECONDS
           value: "120"
-        image: orleansse.azurecr.io/4
+        image: orleansse.azurecr.io/10
         imagePullPolicy: Always
         name: main
         ports:
@@ -90,20 +90,19 @@ spec:
 status:
   availableReplicas: 3
   conditions:
-  - lastTransitionTime: "2022-10-04T00:03:02Z"
-    lastUpdateTime: "2022-10-04T00:03:02Z"
+  - lastTransitionTime: "2022-10-03T23:48:49Z"
+    lastUpdateTime: "2022-10-06T06:36:57Z"
+    message: ReplicaSet "orleans-se-7cd4758c54" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2022-10-06T06:38:45Z"
+    lastUpdateTime: "2022-10-06T06:38:45Z"
     message: Deployment has minimum availability.
     reason: MinimumReplicasAvailable
     status: "True"
     type: Available
-  - lastTransitionTime: "2022-10-03T23:48:49Z"
-    lastUpdateTime: "2022-10-04T00:32:46Z"
-    message: ReplicaSet "orleans-se-6f87575d4" is progressing.
-    reason: ReplicaSetUpdated
-    status: "True"
-    type: Progressing
-  observedGeneration: 5
+  observedGeneration: 16
   readyReplicas: 3
-  replicas: 4
-  unavailableReplicas: 1
-  updatedReplicas: 1
+  replicas: 3
+  updatedReplicas: 3

@@ -11,6 +11,6 @@ namespace BlackRock.OrleansStockExchange.Contracts
     {
         Task<bool> AddNewOrder(Order order);
 
-        Task<IEnumerable<MarketDepthRow>> GetMarketDepth();
+        Task<IEnumerable<MarketDepthLevel>> GetMarketDepth();
     }
 }

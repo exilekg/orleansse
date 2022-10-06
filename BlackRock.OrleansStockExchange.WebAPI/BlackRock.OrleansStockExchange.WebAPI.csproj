@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2" />
+    <PackageReference Include="Azure.Identity" Version="1.7.0" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.18.3" />
     <PackageReference Include="Microsoft.Orleans.Hosting.Kubernetes" Version="3.6.2" />
     <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="3.6.2" />
@@ -23,7 +25,6 @@
     <PackageReference Include="Microsoft.Orleans.Server" Version="3.6.2" />
     <PackageReference Include="Microsoft.Orleans.Core" Version="3.6.2" />
     <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="3.6.2" />
-    <PackageReference Include="Microsoft.Orleans.Persistence.AzureStorage" Version="3.6.2" />
     <PackageReference Include="Microsoft.Orleans.OrleansServiceBus" Version="3.6.2" />
     <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="3.6.2">
       <PrivateAssets>all</PrivateAssets>
